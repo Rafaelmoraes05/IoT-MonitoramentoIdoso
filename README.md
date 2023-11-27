@@ -1,2 +1,2 @@
-# IoT-MonitoramentoIdoso
-Fleshando a ESP32 na AWS. 
+# Fleshando a ESP32 na AWS. 
+
