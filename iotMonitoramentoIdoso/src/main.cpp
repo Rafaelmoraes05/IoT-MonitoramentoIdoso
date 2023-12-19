@@ -10,8 +10,8 @@
 
 //mod
 #define THINGNAME "ESP32-IoT-MonitoramentoIdoso"
-const char WIFI_SSID[] = "GalaxyEric";
-const char WIFI_PASSWORD[] = "12345678";
+const char WIFI_SSID[] = "iPhone de Rafael";
+const char WIFI_PASSWORD[] = "rafael8765";
 const char AWS_IOT_ENDPOINT[] = "a34ypir054ngjb-ats.iot.us-east-2.amazonaws.com";
 
 WiFiClientSecure wifi_client = WiFiClientSecure();
@@ -95,7 +95,6 @@ L8tuuLN1ET5vCrDtA9ZVvnRklX0SajcNLuE+yr41XNNV5faMaeUUJcnn8qNyFWgC
 gxXoSvHsTmpF7gjcSqO2l+0SlPwnrLa+QagQIbOq+Io0yjgISzzUXUvWVimPQCR4
 yo0B7osMH0f9ffJigbiwleDglsbnlGdBmyIswFzdRN1AdlA2NKdHF0k=
 -----END RSA PRIVATE KEY-----
-
 )KEY";
 //endmod
 
@@ -129,7 +128,7 @@ void connectAWS()
 
   //Connect to AWS IOT Broker. 8883 is the port used for MQTT
   mqtt_client.begin(AWS_IOT_ENDPOINT, 8883, wifi_client);
-  
+
   //Set action to be taken on incoming messages
   mqtt_client.onMessage(incomingMessageHandler);
     // Create a message handler
@@ -143,6 +142,7 @@ void connectAWS()
     delay(100);
   }
   Serial.println();
+  Serial.println(WiFi.localIP());
 
   if(!mqtt_client.connected()){
     Serial.println("AWS IoT Timeout!");
@@ -164,10 +164,9 @@ void publishMessage()
   doc["value"] = random(1000);
   char jsonBuffer[512];
   serializeJson(doc, jsonBuffer); // print to mqtt_client
-
   //Publish to the topic
   mqtt_client.publish(AWS_IOT_PUBLISH_TOPIC, jsonBuffer);
-  Serial.println("Sent a message");
+  Serial.println("testando");
 }
 
 // void MessageHandler(String &topic, String &payload) {
@@ -184,6 +183,10 @@ void setup() {
 }
 
 void loop() {
+  if (WiFi.status() != WL_CONNECTED){
+    connectAWS();
+  }
+  
   Serial.println("Start");
   Serial.println(WiFi.localIP());
   publishMessage();
